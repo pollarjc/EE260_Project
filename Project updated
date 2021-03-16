@@ -32,7 +32,7 @@ int main (void) {
 	
 		int LCDdef[16];
 	
-		//Definition for Each number and Letter display on LCD
+		//Definition for Each number and Letter in hex to display on LCD
 		LCDdef[0] = 0x003F;
 		LCDdef[1] = 0x0030;
 		LCDdef[2] = 0x005B;
