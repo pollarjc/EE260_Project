@@ -34,8 +34,9 @@ int main (void) {
 	//char c;
 	char c[4];
 	
-			int LCDdef[16];
+		int LCDdef[16];
 	
+		//Definition for Each number and Letter display on LCD
 		LCDdef[0] = 0x003F;
 		LCDdef[1] = 0x0030;
 		LCDdef[2] = 0x005B;
@@ -53,12 +54,6 @@ int main (void) {
 		LCDdef[14] = 0x0079;	//E
 		LCDdef[15] = 0x0071;	//F
 		
-		int A=10;
-		int B=11;
-		int C=12;
-		int D=13;
-		int E=14;
-		int F=15;
 	
 	  unsigned char key;
 
@@ -94,22 +89,65 @@ int main (void) {
 			}
 		}
 		
-		    GPIOB->ODR = LCDdef[c[0]];            /* display tens digit */
-        GPIOB->BSRR = 0x000D0000;       /* deselect ones hundreds and thousands digits */
-        GPIOB->BSRR = 0x00000002;       /* select tens digit */
-        delayMs(8);
-        GPIOB->ODR = LCDdef[c[1]];            /* display ones digit */
-        GPIOB->BSRR = 0x000F0000;       /* deselect tens hundreds and thousands digits */
-        GPIOB->BSRR = 0x00000001;       /* select ones digit */
-			  delayMs(8);
-			  GPIOB->ODR = LCDdef[c[2]];            /* display hundreds digit */
-        GPIOB->BSRR = 0x000B0000;       /* deselect ones tens and thousands digits */
-        GPIOB->BSRR = 0x00000004;       /* select hundreds digit */
-			  delayMs(8);
-			  GPIOB->ODR = LCDdef[c[3]];            /* display thousands digit */
-        GPIOB->BSRR = 0x00070000;       /* deselect ones tens and hundreds digits */
+		for(a = 0; a < 4; a++)
+		{
+			if(c[a] == ( 'A' | 'B' | 'C' | 'D' | 'E' | 'F' ))
+			{
+				if(c[a] == 'A')
+				{
+								GPIOB->ODR = LCDdef[10];            /* display digit */
+				}
+				else if(c[a] == 'B')
+				{
+								GPIOB->ODR = LCDdef[11];            /* display digit */
+				}
+				else if(c[a] == 'C')
+				{
+								GPIOB->ODR = LCDdef[12];            /* display digit */
+				}
+				else if(c[a] == 'D')
+				{
+								GPIOB->ODR = LCDdef[13];            /* display digit */
+				}
+				else if(c[a] == 'E')
+				{
+								GPIOB->ODR = LCDdef[14];            /* display digit */
+				}
+				else
+				{
+								GPIOB->ODR = LCDdef[15];            /* display digit */
+				}
+			}
+			else
+			{
+				GPIOB->ODR = LCDdef[c[a]];            /* display digit */
+			}
+			
+			if(a == 0)
+			{
+				GPIOB->BSRR = 0x00070000;       /* deselect ones tens and hundreds digits */
         GPIOB->BSRR = 0x00000008;       /* select thousands digit */
-			  delayMs(8);
+				        delayMs(8);
+			}
+			else if(a == 1)
+			{
+			  GPIOB->BSRR = 0x000B0000;       /* deselect ones tens and thousands digits */
+        GPIOB->BSRR = 0x00000004;       /* select hundreds digit */
+				        delayMs(8);
+			}
+			else if(a == 2)
+			{
+				GPIOB->BSRR = 0x000D0000;       /* deselect ones hundreds and thousands digits */
+        GPIOB->BSRR = 0x00000002;       /* select tens digit */
+				        delayMs(8);
+			}
+			else
+			{
+			  GPIOB->BSRR = 0x000F0000;       /* deselect tens hundreds and thousands digits */
+        GPIOB->BSRR = 0x00000001;       /* select ones digit */
+				        delayMs(8);
+			}
+		}
 		
 		USART2_write(c[0]);	//Write to USART2
 		delayMs(350);	//Give time to process
