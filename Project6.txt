@@ -14,7 +14,7 @@
 
 void delay(void);
 //void delayMs(int n);
-void keypad_init(void);
+void init_project(void);
 char keypad_getkey(void);
 char hexKeys[] = {0x0,'D','E','0','F','C','9','8','7','B','6','5','4','A','3','2','1'};
 //char keypressed;
@@ -29,13 +29,14 @@ void delayMs(int);
  *----------------------------------------------------------------------------*/
 int main (void) {
 
-	//int a;
-	char c;
-	//char c[4];
+	int a;
+	int b = 0;
+	//char c;
+	char c[4];
 	
 	  unsigned char key;
 
-    init();			    /* initialize GPIOB and C */
+    init_project();			    /* initialize GPIOB and C */
 
     USART2_init();                  /* initialize USART2 */
 
@@ -45,44 +46,45 @@ int main (void) {
  * Program should, create and store an array of 4 values based on user keypad input
  */
 
-//	while(1) {                      /* Loop forever */
-//			
-//		key = keypad_getkey();  /* read the keypad */
-//        	if (key != 0)
-//		{
-//			if(c[0] = 0)	//If first value
-//			{
-//				c[a] = hexKeys[key];
-//				delayMs(1);
-//			}
-//			else	//Not first value
-//			{
-//				for(a = 0; a < 4; a++)	//Shift all to right
-//					{
-//					c[a] = c[a+1];			
-//					}
-//				c[0] = hexKeys[key];	//Instantiate new first value
-//				delayMs(1);		
-//			}
-//		}
-//		USART2_write(c);	//Write to USART2
-//		delayMs(350);	//Give time to process
-//    	}
-//}
-
-
-    while(1) {                      /* Loop forever */
+	while(1) {                      /* Loop forever */
 			
 		key = keypad_getkey();  /* read the keypad */
         	if (key != 0)
 		{
-			c = hexKeys[key];
-			delayMs(1);					
-			USART2_write(c);
+			if(b == 0)	//If first value
+			{
+				c[a] = hexKeys[key];
+				delayMs(1);
+				b = 1;
+			}
+			else	//Not first value
+			{
+				for(a = 0; a < 4; a++)	//Shift all to right
+					{
+					c[a] = c[a+1];			
+					}
+				c[0] = hexKeys[key];	//Instantiate new first value
+				delayMs(1);		
+			}
 		}
-		delayMs(350);
+		USART2_write(c[0]);	//Write to USART2
+		delayMs(350);	//Give time to process
     	}
 }
+
+
+//    while(1) {                      /* Loop forever */
+//			
+//		key = keypad_getkey();  /* read the keypad */
+ //       	if (key != 0)
+//		{
+//			c = hexKeys[key];
+//			delayMs(1);					
+//			USART2_write(c);
+//		}
+//		delayMs(350);
+ //   	}
+//}
 
 /*----------------------------------------------------------------------------
   Initialize UART pins, Baudrate
@@ -134,7 +136,7 @@ void delayMs(int n) {
 /* this function initializes PC0-3 (column) and PC4-7 (row).
  * The column pins need to have the pull-up resistors enabled.
  */
-void init(void) {
+void init_project(void) {
     RCC->AHB1ENR |=  0x06;	        /* enable GPIOB-C clock */
 	//GPIOB->MODER &= ~0x3FFFCCFF;
 	//GPIOB->MODER |=  0x15554455;
