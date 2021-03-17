@@ -85,8 +85,8 @@ int main (void) {
 				c[0] = hexKeys[key];	//Instantiate new first value
 				delayMs(1);		
 			}
-		}
-		
+			
+			
 		for(a = 0; a < 4; a++)
 		{
 			if(c[a] == ( 'A' | 'B' | 'C' | 'D' | 'E' | 'F' ))
@@ -146,7 +146,8 @@ int main (void) {
 				        delayMs(8);
 			}
 		}
-		
+		    LCD_init();
+		init_project();
 		LCD_command(0x84);
 		LCD_data(c[0]);
 		LCD_data(c[1]);
@@ -155,7 +156,9 @@ int main (void) {
 	
 		USART2_write(c[0]);	//Write to USART2
 		delayMs(350);	//Give time to process
-    	}
+		}
+		
+  }
 }
 
 /* initialize GPIOB/C then initialize LCD controller */
@@ -299,12 +302,12 @@ char keypad_getkey(void) {
     const int row_high[] = {0x00000010, 0x00000020, 0x00000040, 0x00000080}; /* one row is high */
 
     /* check to see any key pressed */
-    GPIOC->MODER = 0x00005500;      /* make all row pins output */
+    GPIOC->MODER = 0x00005500;      /* make all row pins output */ //
     GPIOC->BSRR =  0x00F00000;      /* drive all row pins low */
 		delayMs(1);		
     //delay();                        /* wait for signals to settle */
     col = GPIOC->IDR & 0x000F;      /* read all column pins */
-    GPIOC->MODER &= ~0x0000FF00;    /* disable all row pins drive */
+    GPIOC->MODER = GPIOC->MODER & ~0x0000FF00;    /* disable all row pins drive */
     if (col == 0x000F)              /* if all columns are high */
         return 0;                       /* no key pressed */
 
